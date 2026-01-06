@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { buttonVariants } from "./ui/button";
+import { ButtonGroup } from "./ui/button-group";
 
 export const Header = () => {
   return (
@@ -17,18 +18,20 @@ export const Header = () => {
       </div>
 
       <div className="flex items-center gap-2">
-        <Link
-          className={buttonVariants({ variant: "default" })}
-          href="/auth/login"
-        >
-          Login
-        </Link>
-        <Link
-          className={buttonVariants({ variant: "outline" })}
-          href="/auth/register"
-        >
-          Register
-        </Link>
+        <ButtonGroup>
+          <Link
+            className={buttonVariants({ variant: "default" })}
+            href="/auth/login"
+          >
+            Login
+          </Link>
+          <Link
+            className={buttonVariants({ variant: "outline" })}
+            href="/auth/register"
+          >
+            Register
+          </Link>
+        </ButtonGroup>
         <ThemeToggle />
       </div>
     </nav>
