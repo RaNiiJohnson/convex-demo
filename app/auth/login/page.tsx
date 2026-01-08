@@ -20,7 +20,7 @@ export default async function SigninPage() {
             <p className="text-sm text-muted-foreground">
               Vous n&apos;avez pas de compte ?{" "}
               <Link
-                href="/auth/signup"
+                href="/auth/register"
                 className="font-medium text-primary hover:underline"
               >
                 Inscrivez-vous
