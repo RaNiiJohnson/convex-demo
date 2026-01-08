@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Header } from "@/components/header";
 import { Toaster } from "sonner";
 import { ConvexClientProvider } from "@/web/ConvexClientProvider";
 
@@ -37,10 +36,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
-            <Header />
-            <ConvexClientProvider>{children}</ConvexClientProvider>
-          </main>
+          <ConvexClientProvider>
+            <main className="max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
+              {children}
+            </main>
+          </ConvexClientProvider>
           <Toaster />
         </ThemeProvider>
       </body>
