@@ -21,6 +21,14 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       enabled: true,
       requireEmailVerification: false,
     },
+    user: {
+      additionalFields: {
+        ville: {
+          type: "string",
+          required: false,
+        },
+      },
+    },
     plugins: [
       // The Convex plugin is required for Convex compatibility
       convex({ authConfig }),

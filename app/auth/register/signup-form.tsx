@@ -16,10 +16,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { PasswordInput } from "@/components/ui/password-input";
+import { authClient } from "@/lib/auth-client";
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const SignupFormSchema = z
   .object({
     name: z.string().min(2, {
+      message: "Le nom doit contenir au moins 2 caractères.",
+    }),
+    ville: z.string().min(2, {
       message: "Le nom doit contenir au moins 2 caractères.",
     }),
     email: z.email({
@@ -38,10 +45,13 @@ const SignupFormSchema = z
   });
 
 export function SignupForm() {
+  const router = useRouter();
+  const [, startTransition] = useTransition();
   const form = useForm<z.infer<typeof SignupFormSchema>>({
     resolver: zodResolver(SignupFormSchema),
     defaultValues: {
       name: "",
+      ville: "",
       email: "",
       password: "",
       passwordConfirmation: "",
@@ -52,7 +62,23 @@ export function SignupForm() {
   } = form;
 
   async function onSubmit(values: z.infer<typeof SignupFormSchema>) {
-    console.log(values);
+    startTransition(async () => {
+      await authClient.signUp.email({
+        email: values.email,
+        password: values.password,
+        name: values.name,
+        ville: values.ville,
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("Inscription réussie.");
+            router.push("/");
+          },
+          onError: () => {
+            toast.error("Inscription échouée.");
+          },
+        },
+      });
+    });
   }
 
   return (
@@ -87,6 +113,24 @@ export function SignupForm() {
                   <Input
                     type="email"
                     placeholder="nom@exemple.com"
+                    className="h-11"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="ville"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Ville</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Tana"
                     className="h-11"
                     {...field}
                   />

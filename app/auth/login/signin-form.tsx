@@ -1,4 +1,5 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,6 +18,9 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const SignInFormSchema = z.object({
   email: z.email({
@@ -29,6 +33,8 @@ const SignInFormSchema = z.object({
 });
 
 export function SigninForm() {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof SignInFormSchema>>({
     resolver: zodResolver(SignInFormSchema),
     defaultValues: {
@@ -42,7 +48,19 @@ export function SigninForm() {
   } = form;
 
   async function onSubmit(values: z.infer<typeof SignInFormSchema>) {
-    console.log(values);
+    await authClient.signIn.email({
+      email: values.email,
+      password: values.password,
+      fetchOptions : {
+        onSuccess: () => {
+         toast.success("Connexion réussie.") 
+         router.push("/")
+        },
+        onError: () => {
+          toast.error("Connexion échouée.")
+        }
+      }
+    });
   }
 
   return (
